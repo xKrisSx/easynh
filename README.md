@@ -13,6 +13,7 @@ Prywatny addon do GregTech: New Horizons **2.9.0** z lekko złagodzonymi zasadam
 | Lapis (Luck) w Tinkers stackowalny | 2x: max 900 lapis, Fortune/Looting VI | podmiana `TinkerTools.modLapis` na `ModLapisStacked`; każde 450 lapis = 1 slot modyfikatora, progi 100/300/450 w każdej porcji |
 | Limit fortune na rudach GT | 6 zamiast 3 | `@ModifyConstant` w `getBigOreDrops` (GT/BW/GT++); działa przy domyślnym `oreDropSystem=FortuneItem` |
 | Rozdział questów „GTNH Easy Mode” | Iron Hammer za 16 sztabek żelaza, Iron Lumber Axe za 12 | mixin w `QuestCommandDefaults#load/loadLegacy` dodaje rozdział przy każdym (prze)ładowaniu bazy questów; narzędzia buduje `ToolBuilder` TiC |
+| Quest „Silk Without Bees” (powtarzalny) | 64 Woven Cotton → 8 Woven Silk | ten sam rozdział questów; Woven Cotton z Pam's HarvestCraft, Woven Silk z Forestry |
 | Ore Drilling Plant też dostaje mnożnik rud | 2x | ODP kopie z silk touch, więc obsługuje to osobny mixin w `OreManager#mineBlock` |
 
 Pominięte celowo:
@@ -39,6 +40,9 @@ Pominięte celowo:
   - `enableToolQuests`
   - `hammerQuestIronCost`
   - `lumberAxeQuestIronCost`
+  - `enableSilkQuest`
+  - `silkQuestCottonCost`
+  - `silkQuestSilkReward`
 
 Ustawienie `1.0` (albo `0` dla naprawy) wyłącza daną zmianę. Zmiana czasu receptur wymaga restartu.
 

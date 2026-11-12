@@ -37,6 +37,9 @@ public class Config {
     public static boolean enableToolQuests = true;
     public static int hammerQuestIronCost = 16;
     public static int lumberAxeQuestIronCost = 12;
+    public static boolean enableSilkQuest = true;
+    public static int silkQuestCottonCost = 64;
+    public static int silkQuestSilkReward = 8;
 
     public static void synchronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
@@ -133,6 +136,15 @@ public class Config {
             1,
             256,
             "Iron ingots for the Lumber Axe.");
+        enableSilkQuest = configuration.getBoolean(
+            "enableSilkQuest",
+            CATEGORY_QUESTS,
+            enableSilkQuest,
+            "Adds a repeatable quest trading Woven Cotton (Pam's HarvestCraft) for Woven Silk (Forestry).");
+        silkQuestCottonCost = configuration
+            .getInt("silkQuestCottonCost", CATEGORY_QUESTS, silkQuestCottonCost, 1, 1024, "Woven Cotton per trade.");
+        silkQuestSilkReward = configuration
+            .getInt("silkQuestSilkReward", CATEGORY_QUESTS, silkQuestSilkReward, 1, 64, "Woven Silk per trade.");
 
         if (configuration.hasChanged()) {
             configuration.save();

@@ -32,6 +32,12 @@ public class Config {
     public static double minRepairPercentPerIngot = 10.0;
     public static int lapisMaxStacks = 2;
 
+    // Quests
+    public static final String CATEGORY_QUESTS = "quests";
+    public static boolean enableToolQuests = true;
+    public static int hammerQuestIronCost = 16;
+    public static int lumberAxeQuestIronCost = 12;
+
     public static void synchronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
 
@@ -112,6 +118,21 @@ public class Config {
             10,
             "How many times the Lapis (Luck) modifier can be applied. Each 450 lapis costs one modifier slot and "
                 + "gives up to +3 Fortune/Looting (2 = Fortune VI at 900 lapis). 1 = vanilla Tinkers. Requires restart.");
+
+        enableToolQuests = configuration.getBoolean(
+            "enableToolQuests",
+            CATEGORY_QUESTS,
+            enableToolQuests,
+            "Adds a 'GTNH Easy Mode' quest chapter: trade iron ingots for an iron Tinkers' Hammer and Lumber Axe.");
+        hammerQuestIronCost = configuration
+            .getInt("hammerQuestIronCost", CATEGORY_QUESTS, hammerQuestIronCost, 1, 256, "Iron ingots for the Hammer.");
+        lumberAxeQuestIronCost = configuration.getInt(
+            "lumberAxeQuestIronCost",
+            CATEGORY_QUESTS,
+            lumberAxeQuestIronCost,
+            1,
+            256,
+            "Iron ingots for the Lumber Axe.");
 
         if (configuration.hasChanged()) {
             configuration.save();

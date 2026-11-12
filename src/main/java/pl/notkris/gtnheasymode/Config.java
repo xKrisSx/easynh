@@ -6,12 +6,94 @@ import net.minecraftforge.common.config.Configuration;
 
 public class Config {
 
-    public static String greeting = "Hello World";
+    public static final String CATEGORY_RECIPES = "recipes";
+    public static final String CATEGORY_ORES = "ores";
+    public static final String CATEGORY_TINKERS = "tinkers";
+
+    // Recipes
+    public static double recipeSpeedMultiplier = 2.0;
+    public static String[] recipeMapBlacklist = { "gt.recipe.dieselgeneratorfuel",
+        "gt.recipe.extremedieselgeneratorfuel", "gt.recipe.gasturbinefuel", "gt.recipe.thermalgeneratorfuel",
+        "gt.recipe.semifluidgeneratorfuels", "gt.recipe.semifluidboilerfuels", "gt.recipe.plasmageneratorfuels",
+        "gt.recipe.magicfuels", "gt.recipe.rocketenginefuel", "gt.recipe.largeboilerfakefuels",
+        "gt.recipe.RTGgenerators", "gt.recipe.smallnaquadahreactor", "gt.recipe.largenaquadahreactor",
+        "gt.recipe.hugenaquadahreactor", "gt.recipe.extrahugenaquadahreactor", "gt.recipe.fluidnaquadahreactor",
+        "gt.recipe.fissionfuel", "gt.recipe.lftr", "gt.recipe.thermalboiler", "gt.recipe.solartower",
+        "gt.recipe.ic2nuke", "kubatech.htgrrecipes", "bw.fuels.acidgens", "gg.recipe.naquadah_reactor" };
+    public static boolean logRecipeMaps = false;
+
+    // Ores
+    public static double oreDropMultiplier = 2.0;
+    public static double smallOreDropMultiplier = 2.0;
+
+    // Tinkers
+    public static double toolXpMultiplier = 2.0;
+    public static double minRepairPercentPerIngot = 10.0;
 
     public static void synchronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
 
-        greeting = configuration.getString("greeting", Configuration.CATEGORY_GENERAL, greeting, "How shall I greet?");
+        recipeSpeedMultiplier = configuration
+            .get(
+                CATEGORY_RECIPES,
+                "recipeSpeedMultiplier",
+                recipeSpeedMultiplier,
+                "GregTech recipe durations are divided by this value (2.0 = twice as fast, also halves total EU cost). "
+                    + "1.0 disables. Requires restart.",
+                1.0,
+                64.0)
+            .getDouble();
+        recipeMapBlacklist = configuration.getStringList(
+            "recipeMapBlacklist",
+            CATEGORY_RECIPES,
+            recipeMapBlacklist,
+            "Recipe map names (case-insensitive, exact) that are not sped up. Fuel/generator maps use duration as "
+                + "burn time, so speeding them up would make fuels worse. Maps using GT's FuelBackend and "
+                + "energy-producing recipes (negative EU/t) are always skipped. Use logRecipeMaps to see names.");
+        logRecipeMaps = configuration.getBoolean(
+            "logRecipeMaps",
+            CATEGORY_RECIPES,
+            logRecipeMaps,
+            "Log every recipe map name and whether it was sped up (useful for tuning the blacklist).");
+
+        oreDropMultiplier = configuration
+            .get(
+                CATEGORY_ORES,
+                "oreDropMultiplier",
+                oreDropMultiplier,
+                "Multiplier for drops of naturally generated GregTech / BartWorks / GT++ ores (players, miners, "
+                    + "ore drilling plants). Silk touch and player-placed ores are not affected. 1.0 disables.",
+                0.0,
+                64.0)
+            .getDouble();
+        smallOreDropMultiplier = configuration
+            .get(
+                CATEGORY_ORES,
+                "smallOreDropMultiplier",
+                smallOreDropMultiplier,
+                "Same as oreDropMultiplier, but for small ores.",
+                0.0,
+                64.0)
+            .getDouble();
+
+        toolXpMultiplier = configuration
+            .get(
+                CATEGORY_TINKERS,
+                "toolXpMultiplier",
+                toolXpMultiplier,
+                "Multiplier for XP gained by Tinkers' tools (IguanaTweaks leveling). 1.0 disables.",
+                0.0,
+                100.0)
+            .getDouble();
+        minRepairPercentPerIngot = configuration.get(
+            CATEGORY_TINKERS,
+            "minRepairPercentPerIngot",
+            minRepairPercentPerIngot,
+            "Minimum % of total durability restored per ingot (or ingot-equivalent) when repairing a Tinkers' tool. "
+                + "Better vanilla results are kept. 0 disables.",
+            0.0,
+            100.0)
+            .getDouble();
 
         if (configuration.hasChanged()) {
             configuration.save();

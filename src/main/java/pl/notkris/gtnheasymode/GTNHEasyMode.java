@@ -3,48 +3,70 @@ package pl.notkris.gtnheasymode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStartedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 
 @Mod(
     modid = GTNHEasyMode.MODID,
     version = Tags.VERSION,
     name = "GTNH Easy Mode",
-    acceptedMinecraftVersions = "[1.7.10]")
+    acceptedMinecraftVersions = "[1.7.10]",
+    dependencies = "required-after:gregtech")
 public class GTNHEasyMode {
 
     public static final String MODID = "gtnheasymode";
     public static final Logger LOG = LogManager.getLogger(MODID);
 
-    @SidedProxy(clientSide = "pl.notkris.gtnheasymode.ClientProxy", serverSide = "pl.notkris.gtnheasymode.CommonProxy")
-    public static CommonProxy proxy;
-
     @Mod.EventHandler
-    // preInit "Run before anything else. Read your config, create blocks, items, etc, and register them with the
-    // GameRegistry." (Remove if not needed)
     public void preInit(FMLPreInitializationEvent event) {
-        proxy.preInit(event);
+        Config.synchronizeConfiguration(event.getSuggestedConfigurationFile());
+        LOG.info(
+            "GTNH Easy Mode {}: recipes {}x faster, ores {}x / small ores {}x, tool XP {}x, min repair {}%/ingot",
+            Tags.VERSION,
+            Config.recipeSpeedMultiplier,
+            Config.oreDropMultiplier,
+            Config.smallOreDropMultiplier,
+            Config.toolXpMultiplier,
+            Config.minRepairPercentPerIngot);
     }
 
     @Mod.EventHandler
-    // load "Do your mod setup. Build whatever data structures you care about. Register recipes." (Remove if not needed)
     public void init(FMLInitializationEvent event) {
-        proxy.init(event);
+        FMLCommonHandler.instance()
+            .bus()
+            .register(new ClientTickHandler());
+    }
+
+    // Recipe durations are changed only after *every* mod finished loading: several mods (e.g. GT++) copy recipes
+    // between maps in FMLLoadCompleteEvent, and copies made from already sped-up recipes would get sped up twice.
+
+    @Mod.EventHandler
+    public void serverAboutToStart(FMLServerAboutToStartEvent event) {
+        RecipeSpeedup.apply("server about to start");
     }
 
     @Mod.EventHandler
-    // postInit "Handle interaction with other mods, complete your setup based on this." (Remove if not needed)
-    public void postInit(FMLPostInitializationEvent event) {
-        proxy.postInit(event);
+    public void serverStarted(FMLServerStartedEvent event) {
+        // Catches recipes registered during server start; already processed recipes are skipped.
+        RecipeSpeedup.apply("server started");
     }
 
-    @Mod.EventHandler
-    // register server commands in this event handler (Remove if not needed)
-    public void serverStarting(FMLServerStartingEvent event) {
-        proxy.serverStarting(event);
+    /** On a client connected to a dedicated server this keeps NEI in sync with the server's durations. */
+    public static class ClientTickHandler {
+
+        private boolean done;
+
+        @SubscribeEvent
+        public void onClientTick(TickEvent.ClientTickEvent event) {
+            if (done || event.phase != TickEvent.Phase.END) return;
+            done = true;
+            RecipeSpeedup.apply("client first tick");
+        }
     }
 }

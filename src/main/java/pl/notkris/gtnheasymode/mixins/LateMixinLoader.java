@@ -20,6 +20,8 @@ public class LateMixinLoader implements ILateMixinLoader {
         List<String> mixins = new ArrayList<>();
         if (loadedMods.contains("gregtech")) {
             mixins.add("OreAdapterMixin");
+            mixins.add("OreManagerMixin");
+            mixins.add("OreFortuneCapMixin");
         }
         if (loadedMods.contains("TConstruct")) {
             mixins.add("ModToolRepairMixin");

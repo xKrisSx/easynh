@@ -25,10 +25,12 @@ public class Config {
     // Ores
     public static double oreDropMultiplier = 2.0;
     public static double smallOreDropMultiplier = 2.0;
+    public static int gtOreFortuneCap = 6;
 
     // Tinkers
     public static double toolXpMultiplier = 2.0;
     public static double minRepairPercentPerIngot = 10.0;
+    public static int lapisMaxStacks = 2;
 
     public static void synchronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
@@ -75,6 +77,14 @@ public class Config {
                 0.0,
                 64.0)
             .getDouble();
+        gtOreFortuneCap = configuration.getInt(
+            "gtOreFortuneCap",
+            CATEGORY_ORES,
+            gtOreFortuneCap,
+            3,
+            100,
+            "GregTech normally ignores Fortune above III on big ores. Fortune levels up to this value now count. "
+                + "Only matters with oreDropSystem=FortuneItem (GTNH default). 3 = vanilla GT behaviour.");
 
         toolXpMultiplier = configuration
             .get(
@@ -94,6 +104,14 @@ public class Config {
             0.0,
             100.0)
             .getDouble();
+        lapisMaxStacks = configuration.getInt(
+            "lapisMaxStacks",
+            CATEGORY_TINKERS,
+            lapisMaxStacks,
+            1,
+            10,
+            "How many times the Lapis (Luck) modifier can be applied. Each 450 lapis costs one modifier slot and "
+                + "gives up to +3 Fortune/Looting (2 = Fortune VI at 900 lapis). 1 = vanilla Tinkers. Requires restart.");
 
         if (configuration.hasChanged()) {
             configuration.save();

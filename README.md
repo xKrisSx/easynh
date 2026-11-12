@@ -10,6 +10,9 @@ Prywatny addon do GregTech: New Horizons **2.9.0** z lekko złagodzonymi zasadam
 | Drop z naturalnych rud GT / BartWorks / GT++ | 2x (małe rudy też 2x) | mixin w `IOreAdapter#getOreDrops`, przez który przechodzą gracz, minery i ore drilling plant |
 | EXP narzędzi Tinkers (IguanaTweaks) | 2x | mixin w `LevelingLogic#addXP` |
 | Naprawa narzędzi Tinkers | min. 10% max wytrzymałości na sztabkę | mixin w `ModToolRepair#calculateIncrease`; lepszy wynik z oryginalnego wzoru zostaje |
+| Lapis (Luck) w Tinkers stackowalny | 2x: max 900 lapis, Fortune/Looting VI | podmiana `TinkerTools.modLapis` na `ModLapisStacked`; każde 450 lapis = 1 slot modyfikatora, progi 100/300/450 w każdej porcji |
+| Limit fortune na rudach GT | 6 zamiast 3 | `@ModifyConstant` w `getBigOreDrops` (GT/BW/GT++); działa przy domyślnym `oreDropSystem=FortuneItem` |
+| Ore Drilling Plant też dostaje mnożnik rud | 2x | ODP kopie z silk touch, więc obsługuje to osobny mixin w `OreManager#mineBlock` |
 
 Pominięte celowo:
 - **Mapy paliw i generatorów** (diesel, gas turbine, naquadah reactor, LFTR, HTGR…), bo tam czas oznacza czas spalania, więc „przyspieszenie” osłabiłoby paliwo. Pomijane są też receptury z ujemnym EU/t.
@@ -26,9 +29,11 @@ Pominięte celowo:
 - `ores`:
   - `oreDropMultiplier`
   - `smallOreDropMultiplier`
+  - `gtOreFortuneCap`
 - `tinkers`:
   - `toolXpMultiplier`
   - `minRepairPercentPerIngot`
+  - `lapisMaxStacks`
 
 Ustawienie `1.0` (albo `0` dla naprawy) wyłącza daną zmianę. Zmiana czasu receptur wymaga restartu.
 

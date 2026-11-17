@@ -11,7 +11,7 @@ public class Config {
     public static final String CATEGORY_TINKERS = "tinkers";
 
     // Recipes
-    public static double recipeSpeedMultiplier = 2.0;
+    public static double recipeSpeedMultiplier = 4.0;
     public static String[] recipeMapBlacklist = { "gt.recipe.dieselgeneratorfuel",
         "gt.recipe.extremedieselgeneratorfuel", "gt.recipe.gasturbinefuel", "gt.recipe.thermalgeneratorfuel",
         "gt.recipe.semifluidgeneratorfuels", "gt.recipe.semifluidboilerfuels", "gt.recipe.plasmageneratorfuels",
@@ -34,9 +34,16 @@ public class Config {
 
     // Quests
     public static final String CATEGORY_QUESTS = "quests";
+    public static boolean enableInfoQuest = true;
     public static boolean enableToolQuests = true;
     public static int hammerQuestIronCost = 16;
     public static int lumberAxeQuestIronCost = 12;
+    public static boolean enableHealingAxeQuest = true;
+    public static int healingAxeQuestDiamondCost = 8;
+    public static boolean enableProspectorQuest = true;
+    public static String prospectorQuestMaterial = "Orichalcum";
+    public static String prospectorQuestDurabilityMaterial = "Infinity";
+    public static int prospectorQuestWandCost = 1;
     public static boolean enableSilkQuest = true;
     public static int silkQuestCottonCost = 64;
     public static int silkQuestSilkReward = 8;
@@ -122,6 +129,11 @@ public class Config {
             "How many times the Lapis (Luck) modifier can be applied. Each 450 lapis costs one modifier slot and "
                 + "gives up to +3 Fortune/Looting (2 = Fortune VI at 900 lapis). 1 = vanilla Tinkers. Requires restart.");
 
+        enableInfoQuest = configuration.getBoolean(
+            "enableInfoQuest",
+            CATEGORY_QUESTS,
+            enableInfoQuest,
+            "Adds an info quest (just a checkbox) listing everything this addon changes, with current config values.");
         enableToolQuests = configuration.getBoolean(
             "enableToolQuests",
             CATEGORY_QUESTS,
@@ -136,6 +148,44 @@ public class Config {
             1,
             256,
             "Iron ingots for the Lumber Axe.");
+        enableHealingAxeQuest = configuration.getBoolean(
+            "enableHealingAxeQuest",
+            CATEGORY_QUESTS,
+            enableHealingAxeQuest,
+            "Adds a quest trading diamonds for an Extra Utilities Healing Axe.");
+        healingAxeQuestDiamondCost = configuration.getInt(
+            "healingAxeQuestDiamondCost",
+            CATEGORY_QUESTS,
+            healingAxeQuestDiamondCost,
+            1,
+            256,
+            "Diamonds for the Healing Axe.");
+        enableProspectorQuest = configuration.getBoolean(
+            "enableProspectorQuest",
+            CATEGORY_QUESTS,
+            enableProspectorQuest,
+            "Adds a quest trading an Ore Finder Wand (IFU) for a Prospector's Scanner (LV) made of a strong material.");
+        prospectorQuestMaterial = configuration.getString(
+            "prospectorQuestMaterial",
+            CATEGORY_QUESTS,
+            prospectorQuestMaterial,
+            "GregTech material the Prospector's Scanner is made of. Its tool quality sets the scan range: "
+                + "quality 0-2 = 1x1 chunk (Orichalcum, Vulcanite, Iron), 3-6 = 3x3 (Steel, Neutronium, Tritanium), "
+                + "Infinity (17) = 9x9.");
+        prospectorQuestDurabilityMaterial = configuration.getString(
+            "prospectorQuestDurabilityMaterial",
+            CATEGORY_QUESTS,
+            prospectorQuestDurabilityMaterial,
+            "The scanner gets the durability it would have if made of this material, without changing its range "
+                + "(tool durability: Infinity 2621440, Tritanium 1435392, Neutronium 655360, Steel 512). "
+                + "Empty = durability of prospectorQuestMaterial.");
+        prospectorQuestWandCost = configuration.getInt(
+            "prospectorQuestWandCost",
+            CATEGORY_QUESTS,
+            prospectorQuestWandCost,
+            1,
+            64,
+            "Ore Finder Wands for the Prospector's Scanner.");
         enableSilkQuest = configuration.getBoolean(
             "enableSilkQuest",
             CATEGORY_QUESTS,

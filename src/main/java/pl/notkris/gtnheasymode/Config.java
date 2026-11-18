@@ -48,6 +48,8 @@ public class Config {
     public static boolean enableSilkQuest = true;
     public static int silkQuestCottonCost = 64;
     public static int silkQuestSilkReward = 8;
+    public static boolean enableLootbagQuests = true;
+    public static int lootbagQuestCircuitCost = 4;
 
     public static void synchronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
@@ -203,6 +205,19 @@ public class Config {
             .getInt("silkQuestCottonCost", CATEGORY_QUESTS, silkQuestCottonCost, 1, 1024, "Woven Cotton per trade.");
         silkQuestSilkReward = configuration
             .getInt("silkQuestSilkReward", CATEGORY_QUESTS, silkQuestSilkReward, 1, 64, "Woven Silk per trade.");
+        enableLootbagQuests = configuration.getBoolean(
+            "enableLootbagQuests",
+            CATEGORY_QUESTS,
+            enableLootbagQuests,
+            "Adds repeatable quests trading circuits of a tier (any kind) for that tier's lootbag, LV to UHV. "
+                + "Each one unlocks with the next tier's main quest (LV circuits -> LV lootbag after 'Tier 2 (MV)').");
+        lootbagQuestCircuitCost = configuration.getInt(
+            "lootbagQuestCircuitCost",
+            CATEGORY_QUESTS,
+            lootbagQuestCircuitCost,
+            1,
+            64,
+            "Circuits per lootbag.");
 
         if (configuration.hasChanged()) {
             configuration.save();

@@ -15,7 +15,8 @@ Addon do **GregTech: New Horizons 2.9.0**, który łagodzi grind, ale nie wywrac
   - Iron Hammer i Iron Lumber Axe (TiC) za sztabki żelaza,
   - Healing Axe (Extra Utilities) za diamenty,
   - Prospector's Scanner z bardzo dużą wytrzymałością za Ore Finder Wand,
-  - powtarzalna wymiana Woven Cotton na Woven Silk (jedwab bez pszczół).
+  - powtarzalna wymiana Woven Cotton na Woven Silk (jedwab bez pszczół),
+  - powtarzalna wymiana 4 dowolnych circuitów danego tieru (LV–UHV) na lootbag tego tieru, odblokowywana po wejściu na kolejny tier (np. LV po „Tier 2 (MV)”).
 
 ## Instalacja
 

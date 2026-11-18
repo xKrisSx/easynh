@@ -1,11 +1,14 @@
 package pl.notkris.gtnheasymode.quests;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import betterquesting.api.enums.EnumQuestVisibility;
 import betterquesting.api.properties.NativeProps;
@@ -33,7 +36,8 @@ import tconstruct.tools.TinkerTools;
 /**
  * Adds a small "GTNH Easy Mode" chapter to the quest book: an info quest listing what the addon changes, iron ingots
  * for an iron Tinkers' Hammer / Lumber Axe, diamonds for Extra Utilities' Healing Axe, an Ore Finder Wand for a
- * high-durability Prospector's Scanner (LV), and (repeatable) Woven Cotton for Forestry's Woven Silk.
+ * high-durability Prospector's Scanner (LV), (repeatable) Woven Cotton for Forestry's Woven Silk and (repeatable)
+ * circuits for the lootbag of their tier, each unlocked by GTNH's main quest of the next tier.
  * <p>
  * Called whenever BetterQuesting (re)loads its quest database, right after it was cleared, so the quests survive
  * default database reloads and quest progress is restored for them like for any other quest.
@@ -51,23 +55,45 @@ public final class EasyQuests {
     /** Forestry craftingMaterial metas: pulsatingDust, pulsatingMesh, silkWisp, wovenSilk, ... */
     private static final int WOVEN_SILK_META = 3;
 
+    /**
+     * Lootbag trades: circuit tier, its ore dictionary name (GT keeps the old names: circuitBasic = LV, ...), the
+     * EnhancedLootBags group = lootbag meta from
+     * GTNH's LootBags.xml, and the GTNH main quest of the next tier that unlocks the trade.
+     */
+    private static final String[] LOOTBAG_TIERS = { "LV", "MV", "HV", "EV", "IV", "LuV", "ZPM", "UV", "UHV" };
+    private static final String[] LOOTBAG_CIRCUITS = { "circuitBasic", "circuitGood", "circuitAdvanced", "circuitData",
+        "circuitElite", "circuitMaster", "circuitUltimate", "circuitSuperconductor", "circuitInfinite" };
+    private static final int[] LOOTBAG_METAS = { 4, 5, 6, 7, 8, 41, 42, 43, 44 };
+    private static final String[] LOOTBAG_UNLOCK_NAMES = { "Tier 2 (MV)", "Tier 3 (HV)", "Tier 4 (EV)", "Tier 5 (IV)",
+        "Tier 6 (LuV)", "Tier 7 (ZPM)", "Tier 8 (UV)", "Tier 9 (UHV)", "Tier 10 (UEV)" };
+    private static final UUID[] LOOTBAG_UNLOCK_QUESTS = { gtnhQuest(0x47c), gtnhQuest(0xa0), gtnhQuest(0xb0),
+        gtnhQuest(0xd5), gtnhQuest(0x5d5), gtnhQuest(0xa32), gtnhQuest(0xa35), gtnhQuest(0xa38),
+        UUID.fromString("93d3c0dd-bba1-4ef2-b510-9a4f7c0f1902") };
+
     private EasyQuests() {}
 
     private static UUID id(String name) {
         return UUID.nameUUIDFromBytes((GTNHEasyMode.MODID + ":" + name).getBytes(StandardCharsets.UTF_8));
     }
 
+    /** Older GTNH quests keep UUIDs made from their former numeric IDs. */
+    private static UUID gtnhQuest(long id) {
+        return new UUID(0L, id);
+    }
+
     public static void inject() {
         if (!Config.enableInfoQuest && !Config.enableToolQuests
             && !Config.enableHealingAxeQuest
             && !Config.enableProspectorQuest
-            && !Config.enableSilkQuest) return;
+            && !Config.enableSilkQuest
+            && !Config.enableLootbagQuests) return;
         try {
             IQuestLine line = new QuestLine();
             line.setProperty(NativeProps.NAME, "GTNH Easy Mode");
             line.setProperty(
                 NativeProps.DESC,
-                "Small shortcuts added by the GTNH Easy Mode addon: early big Tinkers' tools and silk without bees.");
+                "Small shortcuts added by the GTNH Easy Mode addon: early big Tinkers' tools, silk without bees "
+                    + "and lootbags for spare circuits.");
             line.setProperty(NativeProps.VISIBILITY, EnumQuestVisibility.ALWAYS);
             ItemStack chapterIcon = null;
             int added = 0;
@@ -197,6 +223,47 @@ public final class EasyQuests {
                 }
             }
 
+            if (Config.enableLootbagQuests) {
+                Item lootbag = GameRegistry.findItem("enhancedlootbags", "lootbag");
+                if (lootbag == null) {
+                    GTNHEasyMode.LOG.warn("Lootbag item (EnhancedLootBags) not found, lootbag quests not added");
+                } else {
+                    for (int i = 0; i < LOOTBAG_TIERS.length; i++) {
+                        String tier = LOOTBAG_TIERS[i];
+                        ItemStack circuit = firstOre(LOOTBAG_CIRCUITS[i]);
+                        if (circuit == null) {
+                            GTNHEasyMode.LOG.warn(
+                                "No {} in the ore dictionary, {} lootbag quest not added",
+                                LOOTBAG_CIRCUITS[i],
+                                tier);
+                            continue;
+                        }
+                        circuit.stackSize = Config.lootbagQuestCircuitCost;
+                        ItemStack bag = new ItemStack(lootbag, 1, LOOTBAG_METAS[i]);
+                        if (chapterIcon == null) chapterIcon = bag;
+                        IQuest quest = addQuest(
+                            line,
+                            id("quest.lootbag_" + tier.toLowerCase()),
+                            tier + " Lootbag",
+                            "Spare " + tier
+                                + " circuits? Trade "
+                                + Config.lootbagQuestCircuitCost
+                                + " of them (any kind) for a "
+                                + tier
+                                + " lootbag. Repeatable as often as you like.\n\nUnlocks with "
+                                + LOOTBAG_UNLOCK_NAMES[i]
+                                + ".",
+                            new BigItemStack(circuit).setOreDict(LOOTBAG_CIRCUITS[i]),
+                            bag,
+                            true,
+                            i * 48,
+                            144);
+                        quest.setRequirements(Collections.singletonList(LOOTBAG_UNLOCK_QUESTS[i]));
+                        added++;
+                    }
+                }
+            }
+
             if (added == 0) return;
             line.setProperty(NativeProps.ICON, new BigItemStack(chapterIcon));
             QuestLineDatabase.INSTANCE.put(QUEST_LINE_ID, line);
@@ -305,12 +372,28 @@ public final class EasyQuests {
                 .append(Config.silkQuestSilkReward)
                 .append(" Woven Silk)\n");
         }
+        if (Config.enableLootbagQuests) {
+            sb.append("  - Tier lootbags, repeatable (")
+                .append(Config.lootbagQuestCircuitCost)
+                .append(" circuits of any kind -> 1 lootbag of the same tier, LV to UHV). Each trade unlocks with ")
+                .append("the next tier's main quest (LV after Tier 2 (MV), ...)\n");
+        }
         sb.append("\nAll values can be changed in config/gtnheasymode.cfg.");
         return sb.toString();
     }
 
     private static String fmt(double value) {
         return value == Math.rint(value) ? String.valueOf((long) value) : String.valueOf(value);
+    }
+
+    /** Copy of the first item registered under {@code name}, or null. */
+    private static ItemStack firstOre(String name) {
+        List<ItemStack> ores = OreDictionary.getOres(name);
+        if (ores.isEmpty()) return null;
+        ItemStack stack = ores.get(0)
+            .copy();
+        if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) stack.setItemDamage(0);
+        return stack;
     }
 
     private static BigItemStack iron(int amount) {
@@ -368,7 +451,7 @@ public final class EasyQuests {
     /**
      * {@code cost == null} makes an info-only quest (checkbox, no reward); {@code rewardStack} is then just the icon.
      */
-    private static void addQuest(IQuestLine line, UUID questId, String name, String desc, BigItemStack cost,
+    private static IQuest addQuest(IQuestLine line, UUID questId, String name, String desc, BigItemStack cost,
         ItemStack rewardStack, boolean repeatable, int x, int y) {
         IQuest quest = new QuestInstance();
         quest.setProperty(NativeProps.NAME, name);
@@ -396,5 +479,6 @@ public final class EasyQuests {
 
         QuestDatabase.INSTANCE.put(questId, quest);
         line.put(questId, new QuestLineEntry(x, y));
+        return quest;
     }
 }

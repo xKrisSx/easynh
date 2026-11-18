@@ -26,6 +26,9 @@ public class LateMixinLoader implements ILateMixinLoader {
         if (loadedMods.contains("TConstruct")) {
             mixins.add("ModToolRepairMixin");
         }
+        if (loadedMods.contains("TGregworks")) {
+            mixins.add("ModTGregRepairMixin");
+        }
         if (loadedMods.contains("betterquesting") && loadedMods.contains("TConstruct")) {
             mixins.add("QuestCommandDefaultsMixin");
         }

@@ -15,7 +15,8 @@ An addon for **GregTech: New Horizons 2.9.0** that cuts down the grind without b
   - Iron Hammer and Iron Lumber Axe (TiC) for iron ingots,
   - Healing Axe (Extra Utilities) for diamonds,
   - a Prospector's Scanner with huge durability for an Ore Finder Wand,
-  - a repeatable Woven Cotton to Woven Silk trade (silk without bees).
+  - a repeatable Woven Cotton to Woven Silk trade (silk without bees),
+  - a repeatable trade of 4 circuits of any kind of a tier (LV-UHV) for that tier's lootbag, unlocked when you reach the next tier (e.g. LV after "Tier 2 (MV)").
 
 ## Installation
 

@@ -9,6 +9,7 @@ An addon for **GregTech: New Horizons 2.9.0** that cuts down the grind without b
 - **Faster GT recipes**: 4x shorter duration in all machines, multiblocks and the assembly line, which also means less total EU. Fuels and generators are left untouched.
 - **More ore**: 2x drops from naturally generated GT / BartWorks / GT++ ores (small ores and the Ore Drilling Plant included). Fortune on GT ores works up to level VI. Silk touch and player-placed ores are not multiplied.
 - **Tinkers' Construct**: 2x tool XP, repairs restore at least 10% durability per ingot, Lapis (Luck) can be applied twice (Fortune/Looting VI).
+- **Forestry Woven Backpacks**: a regular backpack (Miner's, Digger's, Forester's, Hunter's, Adventurer's, Builder's) in the middle of a crafting table with 8 Woven Silk around it gives the Woven version (45 slots). The backpack's contents are kept.
 - **"GTNH Easy Mode" quest chapter**:
   - a list of all changes with the current config values,
   - Iron Hammer and Iron Lumber Axe (TiC) for iron ingots,

@@ -255,6 +255,11 @@ public final class EasyQuests {
         sb.append("- Silk touch and player-placed ores are never multiplied, so ores can't be duplicated.\n");
 
         sb.append("\n\u00a76Added\u00a7r\n");
+        if (Config.enableWovenBackpackRecipes) {
+            sb.append("- Crafting table recipe for Woven Backpacks (Miner's, Digger's, Forester's, Hunter's, ")
+                .append("Adventurer's, Builder's): the normal backpack in the middle, 8 Woven Silk around it. ")
+                .append("Its contents are kept.\n");
+        }
         sb.append("- This quest chapter, trading simple materials for:\n");
         if (Config.enableToolQuests) {
             sb.append("  - Iron Hammer (")

@@ -54,6 +54,9 @@ public class GTNHEasyMode {
         if (Loader.isModLoaded("TConstruct")) {
             TinkersCompat.postInit();
         }
+        if (Config.enableWovenBackpackRecipes && Loader.isModLoaded("Forestry")) {
+            BackpackRecipes.register();
+        }
     }
 
     // Recipe durations are changed only after *every* mod finished loading: several mods (e.g. GT++) copy recipes

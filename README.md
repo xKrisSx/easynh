@@ -9,6 +9,7 @@ Addon do **GregTech: New Horizons 2.9.0**, który łagodzi grind, ale nie wywrac
 - **Szybsze receptury GT**: 4x krótszy czas we wszystkich maszynach, multiblokach i assembly line, a przez to też mniej EU łącznie. Paliwa i generatory zostają bez zmian.
 - **Więcej rudy**: 2x drop z naturalnych rud GT / BartWorks / GT++ (także małych i z Ore Drilling Plant). Fortune na rudach GT działa do poziomu VI. Silk touch i rudy postawione przez gracza nie są mnożone.
 - **Tinkers' Construct**: 2x EXP narzędzi, naprawa przywraca co najmniej 10% wytrzymałości na sztabkę, Lapis (Luck) można nałożyć dwa razy (Fortune/Looting VI).
+- **Woven Backpacki z Forestry**: zwykły plecak (Miner's, Digger's, Forester's, Hunter's, Adventurer's, Builder's) na środku stołu i 8 Woven Silk dookoła daje wersję Woven (45 slotów). Zawartość plecaka zostaje.
 - **Rozdział questów „GTNH Easy Mode”**:
   - lista wszystkich zmian z aktualnymi wartościami z configu,
   - Iron Hammer i Iron Lumber Axe (TiC) za sztabki żelaza,

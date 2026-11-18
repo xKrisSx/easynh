@@ -21,6 +21,7 @@ public class Config {
         "gt.recipe.fissionfuel", "gt.recipe.lftr", "gt.recipe.thermalboiler", "gt.recipe.solartower",
         "gt.recipe.ic2nuke", "kubatech.htgrrecipes", "bw.fuels.acidgens", "gg.recipe.naquadah_reactor" };
     public static boolean logRecipeMaps = false;
+    public static boolean enableWovenBackpackRecipes = true;
 
     // Ores
     public static double oreDropMultiplier = 2.0;
@@ -73,6 +74,13 @@ public class Config {
             CATEGORY_RECIPES,
             logRecipeMaps,
             "Log every recipe map name and whether it was sped up (useful for tuning the blacklist).");
+        enableWovenBackpackRecipes = configuration.getBoolean(
+            "enableWovenBackpackRecipes",
+            CATEGORY_RECIPES,
+            enableWovenBackpackRecipes,
+            "Adds crafting table recipes upgrading Forestry's Miner's, Digger's, Forester's, Hunter's, Adventurer's "
+                + "and Builder's Backpack to the Woven version: the backpack in the middle, 8 Woven Silk around it. "
+                + "Contents are kept.");
 
         oreDropMultiplier = configuration
             .get(
